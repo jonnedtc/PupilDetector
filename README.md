@@ -1,9 +1,11 @@
 # Pupil Detector
 
+## Gradient Intersect
+
 The PupilDetector module contains the GradientIntersect class, which is an implementation of the "Accurate Eye Centre Localisation by Means of Gradients" paper by Fabian Timm and Erhardt Barth.
 This method uses the maximum intersection of gradients as an estimation of the center of a pupil.
 
-# Usage
+## Usage
 
 Import the GradientIntersect class from the PupilDetector module.
 
@@ -15,7 +17,7 @@ Call the locate method on the object with the ndarray as argument, this returns 
 
 As long as the images are the same size you can keep calling the locate method with a new image.
 
-# Speed
+## Speed
 
 To speed up the method add the threshold and step arguments when creating the GradientIntersect object.
 
@@ -24,7 +26,7 @@ The threshold argument is the percentile of brighter pixels to ignore when searc
 The step argument is the amount of pixels to skip when searching for the pupil.
 This takes a sample every few pixels and does a more thorough search close to the maximum sample.
 
-# Examples
+## Examples
 
 ```
 import numpy as np
