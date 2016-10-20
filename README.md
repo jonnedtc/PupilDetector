@@ -5,6 +5,9 @@
 The PupilDetector module contains the GradientIntersect class, which is an implementation of the "Accurate Eye Centre Localisation by Means of Gradients" paper by Fabian Timm and Erhardt Barth.
 This method uses the maximum intersection of gradients as an estimation of the center of a pupil.
 
+![alt text](https://raw.githubusercontent.com/jonnedtc/PupilDetector/master/pupil.png "Example")
+
+
 ## Usage
 
 Import the GradientIntersect class from the PupilDetector module.
@@ -31,7 +34,7 @@ This takes a sample every few pixels and does a more thorough search close to th
 ```
 import numpy as np
 from matplotlib import pyplot as plt
-from EyeLocation import GradientIntersect
+from PupilDetector import GradientIntersect
 
 FILENAME = "image.png"
 frame = plt.imread(FILENAME)
@@ -44,7 +47,7 @@ print mg.locate(gray)
 ```
 import cv2
 import numpy as np
-from EyeLocation import GradientIntersect
+from PupilDetector import GradientIntersect
 
 FILENAME = "movie.webm"
 cap = cv2.VideoCapture(FILENAME)
