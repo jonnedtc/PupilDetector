@@ -26,7 +26,7 @@ This takes a sample every few pixels and does a more thorough search close to th
 
 # Examples
 
-'''
+```
 import numpy as np
 from matplotlib import pyplot as plt
 from EyeLocation import GradientIntersect
@@ -37,9 +37,9 @@ gray = np.sum(frame,axis=2)
 
 mg = GradientIntersect(gray.shape, threshold = 50, step = 8)
 print mg.locate(gray)
-'''
+```
 
-'''
+```
 import cv2
 import numpy as np
 from EyeLocation import GradientIntersect
@@ -51,4 +51,4 @@ gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 mg = GradientIntersect(gray.shape, threshold = 50, step = 8)
 print mg.locate(gray)
-'''
+```
