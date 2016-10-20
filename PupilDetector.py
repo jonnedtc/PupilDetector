@@ -13,13 +13,13 @@ from scipy.ndimage.filters import gaussian_filter
 
 class GradientIntersect:
 
-	def __init__(self, (height, width), threshold=100, skip=0):
+	def __init__(self, (height, width), threshold=100, step=1):
 
 		self.height = height
 		self.width = width
 		self.grid = self.createGrid(height, width)
 		self.area = threshold
-		self.accuracy = skip + 1
+		self.accuracy = step
 		if self.accuracy < 1:
 			self.accuracy = 1
 
