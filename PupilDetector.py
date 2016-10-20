@@ -92,7 +92,7 @@ class GradientIntersect:
 				for cx in range(xval-self.accuracy,xval+self.accuracy+1):
 
 					# select displacement
-					displacement = grid[Y-cy-1:Y*2-cy-1,X-cx-1:X*2-cx-1,:]
+					displacement = self.grid[Y-cy-1:Y*2-cy-1,X-cx-1:X*2-cx-1,:]
 					displacement = np.reshape(displacement,(X*Y,2))
 
 					# calculate score
