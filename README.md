@@ -34,7 +34,7 @@ This takes a sample every few pixels and does a more thorough search close to th
 ```
 import numpy as np
 from matplotlib import pyplot as plt
-from EyeLocation import GradientIntersect
+from PupilDetector import GradientIntersect
 
 FILENAME = "image.png"
 frame = plt.imread(FILENAME)
@@ -47,7 +47,7 @@ print mg.locate(gray)
 ```
 import cv2
 import numpy as np
-from EyeLocation import GradientIntersect
+from PupilDetector import GradientIntersect
 
 FILENAME = "movie.webm"
 cap = cv2.VideoCapture(FILENAME)
