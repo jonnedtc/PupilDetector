@@ -13,13 +13,15 @@ from scipy.ndimage.filters import gaussian_filter
 
 class GradientIntersect:
 
-	def __init__(self, (height, width), threshold=100, step=1):
+	def __init__(self, (height, width), threshold=100, skip=0):
 
 		self.height = height
 		self.width = width
 		self.grid = self.createGrid(height, width)
 		self.area = threshold
-		self.accuracy = step
+		self.accuracy = skip + 1
+		if self.accuracy < 1:
+			self.accuracy = 1
 
 	def createGrid(self, Y, X):
     
@@ -85,7 +87,11 @@ class GradientIntersect:
 		if self.accuracy>1:
 
 			# get maximum value index 
-			(yval,xval) = np.where(scores==np.max(scores))
+			(yval,xval) = np.unravel_index(np.argmax(scores),scores.shape)
+
+			# prevent maximum value index from being close to 0 or max
+			yval = min(max(yval,self.accuracy), Y-self.accuracy-1)
+			xval = min(max(xval,self.accuracy), X-self.accuracy-1)
 
 			# loop through new pixels
 			for cy in range(yval-self.accuracy,yval+self.accuracy+1):
@@ -184,7 +190,11 @@ class GradientIntersect:
 		if self.accuracy>1:
 
 			# get maximum value index 
-			(yval,xval) = np.where(scores==np.max(scores))
+			(yval,xval) = np.unravel_index(np.argmax(scores),scores.shape)
+
+			# prevent maximum value index from being close to 0 or max
+			yval = min(max(yval,self.accuracy), Y-self.accuracy-1)
+			xval = min(max(xval,self.accuracy), X-self.accuracy-1)
 
 			# loop through new pixels
 			for cy in range(yval-self.accuracy,yval+self.accuracy+1):
