@@ -214,3 +214,53 @@ class GradientIntersect:
 		
 		# return values
 		return (py+yval-radius, px+xval-radius)
+
+class IsophoteCurvature:
+
+	def __init__(self, blur = 3, minrad = 2, maxrad = 20):
+
+		self.blur = blur
+		self.minrad = minrad
+		self.maxrad = maxrad
+
+	def locate(self, image):
+
+		# normalize image
+		image = gaussian_filter(image, sigma=self.blur)
+		image = (image.astype('float') - np.min(image))
+		image = image / np.max(image)
+		
+		# calculate gradients
+		Ly, Lx = np.gradient(image)
+		Lyy, Lyx = np.gradient(Ly)
+		Lxy, Lxx = np.gradient(Lx)
+		Lvv = Ly**2 * Lxx - 2*Lx * Lxy * Ly + Lx**2 * Lyy
+		Lw =  Lx**2 + Ly**2
+		Lw[Lw==0] = 0.001
+		Lvv[Lvv==0] = 0.001
+		k = - Lvv / (Lw**1.5)
+		
+		# calculate displacement
+		Dx =  -Lx * (Lw / Lvv)
+		Dy =  -Ly * (Lw / Lvv)
+		displacement = np.sqrt(Dx**2 + Dy**2)
+		
+		# calculate curvedness
+		curvedness = np.absolute(np.sqrt(Lxx**2 + 2 * Lxy**2 + Lyy**2))
+		center_map = np.zeros(image.shape, image.dtype)
+		(height, width)=center_map.shape   
+		for y in range(height):
+			for x in range(width):
+				if Dx[y][x] == 0 and Dy[y][x] == 0:
+					continue
+				if (x + Dx[y][x])>0 and (y + Dy[y][x])>0:
+					if (x + Dx[y][x]) < center_map.shape[1] and (y + Dy[y][x]) < center_map.shape[0] and k[y][x]<0:
+						if displacement[y][x] >= self.minrad and displacement[y][x] <= self.maxrad:
+							center_map[int(y+Dy[y][x])][int(x+Dx[y][x])] += curvedness[y][x]
+		center_map = gaussian_filter(center_map, sigma=self.blur)
+		blurred = gaussian_filter(image, sigma=self.blur)
+		center_map = center_map * (1-blurred)
+		
+		# return maximum location in center_map
+		position = np.unravel_index(np.argmax(center_map), center_map.shape)
+		return position
