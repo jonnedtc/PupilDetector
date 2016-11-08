@@ -14,20 +14,25 @@ Import the GradientIntersect class from the PupilDetector module.
 
 Transform your image to a grayscale numpy ndarray, with shape: (height, width).
 
-Create a new GradientIntersect object with at least the shape of the ndarray as argument.
+Create a new GradientIntersect object.
 
-Call the locate method on the object with the ndarray as argument, this returns the (y, x) position of the pupil.
+Call the locate method on the object with the grayscale image as an argument, this returns the (y, x) position of the pupil.
 
-As long as the images are the same size you can keep calling the locate method with a new image.
+When analyzing a video you can use the track method, to search around the pupil location of the previous frame.
+
+Call the track method with the following arguments: the grayscale image and a tuple (y, x) with the previous location.
 
 ## Speed
 
-To speed up the method add the threshold and step arguments when creating the GradientIntersect object.
+Increase speed of locate by increasing the accuracy variable.
 
-The threshold argument is the percentile of brighter pixels to ignore when searching for the pupil.
+The algorithm takes a sample ones every accuracy*accuracy pixels, after this it takes a closer look around the best sample.
 
-The step argument is the amount of pixels to skip when searching for the pupil.
-This takes a sample every few pixels and does a more thorough search close to the maximum sample.
+Increase speed of track by decreasing radius and distance.
+
+Radius is half the width and height around the previous location (py, px), the whole pupil should still be visible in this area.
+
+Distance is the maximum amount of pixels between the new and old location.
 
 ## Examples
 
@@ -40,8 +45,8 @@ FILENAME = "image.png"
 frame = plt.imread(FILENAME)
 gray = np.sum(frame,axis=2)
 
-mg = GradientIntersect(gray.shape, threshold = 50, step = 8)
-print mg.locate(gray)
+gi = GradientIntersect()
+print gi.locate(gray)
 ```
 
 ```
@@ -54,6 +59,13 @@ cap = cv2.VideoCapture(FILENAME)
 ret,frame = cap.read()
 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-mg = GradientIntersect(gray.shape, threshold = 50, step = 8)
-print mg.locate(gray)
+gi = GradientIntersect()
+loc = gi.locate(gray)
+print loc
+
+ret,frame = cap.read()
+gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+loc = gi.track(gray, loc)
+print loc
 ```

@@ -3,9 +3,13 @@
 # "Accurate Eye Centre Localisation by Means of Gradients"
 
 # Author: Jonne Engelberts
-# Increase speed by setting threshold lower and step higher.
-# Threshold is the percentile of bright area included.
-# Step is the amount of pixels initially skipped.
+# Increase speed of locate by increasing the accuracy variable
+# The algorithm takes a sample ones every accuracy*accuracy pixels
+# After this it takes a closer look around the best sample
+# Increase speed of track by decreasing radius and distance
+# Radius is half the width and height around the previous location (py, px)
+# The whole pupil should still be visible in this area
+# Distance is the maximum amount of pixels between the new and old location
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -46,7 +50,7 @@ class GradientIntersect:
 
 		return gradient
 
-	def locate(self, image, accuracy = 1):
+	def locate(self, image, sigma = 2, accuracy = 1):
 		
 		# get image size
 		Y, X = image.shape
@@ -61,7 +65,7 @@ class GradientIntersect:
 		image = (image.astype('float') - np.min(image)) / np.max(image)
 
 		# blur image
-		blurred = gaussian_filter(image, sigma=5)
+		blurred = gaussian_filter(image, sigma=sigma)
 
 		# get gradient 
 		gradient = self.createGradient(image)
@@ -111,7 +115,7 @@ class GradientIntersect:
 		# return values
 		return (yval, xval)
 
-	def track(self, image, (py, px), radius=50, distance = 10):
+	def track(self, image, (py, px), sigma = 2, radius=50, distance = 10):
 		
 		# select image
 		image = image[py-radius:py+radius+1, px-radius:px+radius+1]
@@ -129,7 +133,7 @@ class GradientIntersect:
 		image = (image.astype('float') - np.min(image)) / np.max(image)
 
 		# blur image
-		blurred = gaussian_filter(image, sigma=5)
+		blurred = gaussian_filter(image, sigma=sigma)
 
 		# get gradient 
 		gradient = self.createGradient(image)
