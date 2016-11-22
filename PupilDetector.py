@@ -12,7 +12,6 @@
 # Distance is the maximum amount of pixels between the new and old location
 
 import numpy as np
-from matplotlib import pyplot as plt
 from scipy.ndimage.filters import gaussian_filter
 
 class GradientIntersect:
