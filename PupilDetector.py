@@ -114,7 +114,8 @@ class GradientIntersect:
 		# return values
 		return (yval, xval)
 
-	def track(self, image, (py, px), sigma = 2, radius=50, distance = 10):
+	def track(self, image, prev, sigma = 2, radius=50, distance = 10):
+		py, px = prev
 		
 		# select image
 		image = image[py-radius:py+radius+1, px-radius:px+radius+1]
